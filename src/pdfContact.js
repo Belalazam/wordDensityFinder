@@ -1,5 +1,5 @@
 export async function whichPage(pageNumber) {
-    chrome.storage.local.set({myVariable: pageNumber}, function() {});
+    await chrome.storage.local.set({myVariable: pageNumber}, function() {});
 
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         chrome.scripting.executeScript({

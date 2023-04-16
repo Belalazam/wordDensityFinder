@@ -1,12 +1,13 @@
+ /*global chrome*/
+
 const pdfjsLib = require('pdfjs-dist/legacy/build/pdf.js');
 pdfjsLib.GlobalWorkerOptions.workerSrc = require('pdfjs-dist/legacy/build/pdf.worker.entry.js');
 
 function handlePdf() {
-  pageNum = 1;
+  var pageNum = 1;
   chrome.storage.local.get('myVariable', function(data) {
-          pageNum = data.myVariable;
+          pageNum = parseInt(data.myVariable);
   });
-  console.error(pageNum)
   var url = window.location.href;
   if (url.endsWith('.pdf')) {
     pdfjsLib.getDocument(url).promise.then(function(pdf) {
