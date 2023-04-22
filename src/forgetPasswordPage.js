@@ -1,55 +1,91 @@
 import React, { useState } from "react";
+import { urlPath } from "./config";
+import { globalValues } from "./globalValues";
 
-const ForgetPassword = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
 
-  const handleLogin = (event) => {
-    event.preventDefault();
-    // validate user credentials
-    if (username === "validUsername" && password === "validPassword") {
-      // store login credentials securely
-      localStorage.setItem("isLoggedIn", true);
-      // navigate to protected page
-      history.push("/protected");
-    } else {
-      alert("Invalid username or password");
-    }
-  };
+const ForgetPassword = ({onLogin, onSignup , onSuccess}) => {
+  const [email , setEmail] = useState("");
+  const [otp, setOtp] = useState("");
+  const [retrySubmit, setRetrySubmit] = useState('get otp');
 
-  const handleSignup = (event) => {
-    event.preventDefault();
-    // navigate to signup page
-    history.push("/signup");
-  };
+  
 
   const handleResetPassword = (event) => {
+
+    setRetrySubmit('resend otp');
+    const url =  urlPath + "otpRequest";
+    const data = {email};
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(jsonData => {
+      if(jsonData.success)
+      {
+        alert("check your email for otp");
+        globalValues = email;
+      }
+      else
+      {
+        alert("oops something went wrong");
+      }
+    })
+    .catch(error => console.error(error));
     event.preventDefault();
-    // navigate to reset password page
-    history.push("/reset-password");
+  };
+
+  const verifyOtp = (event) => {
+
+    const url = urlPath + "validateotp";
+    const data = {email,otp};
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(jsonData => {
+      if(jsonData.success)
+      {
+        onSuccess();
+      }
+      else
+      {
+        alert("wrong otp");
+      }
+    })
+    .catch(error => console.error(error));
+    event.preventDefault();
   };
 
   return (
-    <form className="loginText" onSubmit={handleLogin}>
+    <form className="loginText">
       <label  className="loginLabel">
         Email:
         <input
             type="text"
-            value={username}
-            onChange={(event) => setUsername(event.target.value)}
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
         />
       </label>
       <label className="loginLabel">
         Otp:
         <input
           type="text"
-          value={username}
-          onChange={(event) => setUsername(event.target.value)}
+          value={otp}
+          onChange={(event) => setOtp(event.target.value)}
         />
       </label>
-      <button className="loginSubmit" type="submit">Forgot Password?</button>
-      <button className="signupButton" onClick={handleSignup}>Sign Up</button>
-      <button className="resetPasswordButton" onClick={handleResetPassword}>Log</button>
+      <button className="loginSubmit" type='submit'  onClick={handleResetPassword}>{retrySubmit}</button>
+      <button className="signupButton" onClick={()=>onSignup}>Sign Up</button>
+      <button className="resetPasswordButton" onClick={()=>onLogin} >Log In</button>
+      <button className="loginSubmit" type="submit" onClick={verifyOtp}>submit</button>
     </form>
   );
 };

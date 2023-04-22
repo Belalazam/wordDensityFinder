@@ -1,36 +1,37 @@
 import React, { useState } from "react";
+import { urlPath } from "./config";
 
-const LoginPage = () => {
+const LoginPage = ({onSignup,onForget,onSuccess}) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [ans, setAns] = useState({});
 
   const handleLogin = (event) => {
+    const data = { username , password };
+    const url = urlPath + 'loginuser'
+     fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(jsonData => {
+      if(jsonData.success)
+      {
+        onSuccess();
+      }
+      else
+      {
+        alert("Invalid Credentials");
+      }
+    })
+    .catch(error => console.error(error));
     event.preventDefault();
-    // validate user credentials
-    if (username === "validUsername" && password === "validPassword") {
-      // store login credentials securely
-      localStorage.setItem("isLoggedIn", true);
-      // navigate to protected page
-      history.push("/protected");
-    } else {
-      alert("Invalid username or password");
-    }
   };
-
-  const handleSignup = (event) => {
-    event.preventDefault();
-    // navigate to signup page
-    history.push("/signup");
-  };
-
-  const handleResetPassword = (event) => {
-    event.preventDefault();
-    // navigate to reset password page
-    history.push("/reset-password");
-  };
-
   return (
-    <form className="loginText" onSubmit={handleLogin}>
+    <form className="loginText">
       <label className="loginLabel">
         Username:
         <input
@@ -47,9 +48,9 @@ const LoginPage = () => {
           onChange={(event) => setPassword(event.target.value)}
         />
       </label>
-      <button className="loginSubmit" type="submit">Log In</button>
-      <button className="signupButton" onClick={handleSignup}>Sign Up</button>
-      <button className="resetPasswordButton" onClick={handleResetPassword}>Forgot Password?</button>
+      <button className="loginSubmit" type="submit" onClick={handleLogin}>Log In</button>
+      <button className="signupButton" onClick={()=>onSignup()}>Sign Up</button>
+      <button className="resetPasswordButton" onClick={()=>onForget()}>Forgot Password?</button>
     </form>
   );
 };
