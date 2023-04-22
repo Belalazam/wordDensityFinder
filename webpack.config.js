@@ -6,7 +6,7 @@ module.exports = {
     devtool : "cheap-module-source-map",
     entry : 
     {
-        app : path.resolve("./src/app.js"),
+        app : path.resolve("./src/routing.js"),
         navigateToTheWord : path.resolve("./pdfSearch/navigateToTheWord.js"),
     },
     module: {

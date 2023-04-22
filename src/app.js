@@ -1,12 +1,11 @@
 import React, { useState} from 'react';
 import TypedWords from './typedWords';
-import { createRoot } from 'react-dom/client';
 import { findInPdfPage } from '../pdfSearch/findWordByDensity';
 import { whichPage } from './pdfContact';
 
 
 
-const rootElement = document.getElementById('react-target');
+
 
 const dict = {
   'low': 1000,
@@ -152,5 +151,4 @@ function App() {
     </div>
   );
 }
-createRoot(rootElement).render(<App />);
 export default App;
