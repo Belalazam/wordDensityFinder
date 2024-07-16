@@ -1,0 +1,7 @@
+1) If you have unzip file, unzip it or directly clone it from here
+2) go to chromium based browser, go to extensions
+3) go to manage extensions
+4) go to load unpacked
+5) select the folder
+6) boom you will start seeing the extension in your browser
+7) open the extension, with pdf file, and start operation
